@@ -1,0 +1,369 @@
+{
+  "info": {
+    "_postman_id": "vlab-backend-collection-2026",
+    "name": "VLab Backend API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Coleção para testar todos os endpoints da aplicação VLab Backend."
+  },
+  "item": [
+    {
+      "name": "Autenticação",
+      "item": [
+        {
+          "name": "Login (Obter Token JWT)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/authenticate", "host": ["{{baseUrl}}"], "path": ["api", "authenticate"] }
+          }
+        },
+        {
+          "name": "Verificar Autenticação",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/authenticate", "host": ["{{baseUrl}}"], "path": ["api", "authenticate"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Usuário (Admin)",
+      "item": [
+        {
+          "name": "Criar Usuário",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"login\": \"novoUser\",\n  \"email\": \"novo@exemplo.com\",\n  \"firstName\": \"Novo\",\n  \"lastName\": \"User\",\n  \"password\": \"Senha123!\",\n  \"langKey\": \"pt-br\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/admin/users", "host": ["{{baseUrl}}"], "path": ["api", "admin", "users"] }
+          }
+        },
+        {
+          "name": "Listar Usuários",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/admin/users", "host": ["{{baseUrl}}"], "path": ["api", "admin", "users"] }
+          }
+        },
+        {
+          "name": "Buscar Usuário por Login",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/users/{{login}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "users", "{{login}}"]
+            }
+          }
+        },
+        {
+          "name": "Atualizar Usuário",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"login\": \"novoUser\",\n  \"email\": \"novo@exemplo.com\",\n  \"firstName\": \"Novo\",\n  \"lastName\": \"User\",\n  \"langKey\": \"pt-br\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/users/{{login}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "users", "{{login}}"]
+            }
+          }
+        },
+        {
+          "name": "Deletar Usuário",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/users/{{login}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "users", "{{login}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Conta do Usuário",
+      "item": [
+        {
+          "name": "Registrar Usuário",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"login\": \"usuario\",\n  \"email\": \"usuario@exemplo.com\",\n  \"firstName\": \"Usuário\",\n  \"lastName\": \"Teste\",\n  \"password\": \"Senha123!\",\n  \"langKey\": \"pt-br\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/register", "host": ["{{baseUrl}}"], "path": ["api", "register"] }
+          }
+        },
+        {
+          "name": "Ativar Conta",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/activate?key={{activationKey}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "activate"],
+              "query": [{ "key": "key", "value": "{{activationKey}}" }]
+            }
+          }
+        },
+        {
+          "name": "Obter Conta Atual",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/account", "host": ["{{baseUrl}}"], "path": ["api", "account"] }
+          }
+        },
+        {
+          "name": "Atualizar Conta",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Usuário\",\n  \"lastName\": \"Teste\",\n  \"email\": \"usuario@exemplo.com\",\n  \"langKey\": \"pt-br\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/account", "host": ["{{baseUrl}}"], "path": ["api", "account"] }
+          }
+        },
+        {
+          "name": "Alterar Senha",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"Senha123!\",\n  \"newPassword\": \"NovaSenha123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/account/change-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "account", "change-password"]
+            }
+          }
+        },
+        {
+          "name": "Solicitar Reset de Senha",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "\"usuario@exemplo.com\""
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/account/reset-password/init",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "account", "reset-password", "init"]
+            }
+          }
+        },
+        {
+          "name": "Finalizar Reset de Senha",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"key\": \"{{resetKey}}\",\n  \"newPassword\": \"NovaSenha123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/account/reset-password/finish",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "account", "reset-password", "finish"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Autoridades (Roles)",
+      "item": [
+        {
+          "name": "Criar Autoridade",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"ROLE_NOVA\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/authorities", "host": ["{{baseUrl}}"], "path": ["api", "authorities"] }
+          }
+        },
+        {
+          "name": "Listar Autoridades",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/authorities", "host": ["{{baseUrl}}"], "path": ["api", "authorities"] }
+          }
+        },
+        {
+          "name": "Buscar Autoridade por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/authorities/{{id}}", "host": ["{{baseUrl}}"], "path": ["api", "authorities", "{{id}}"] }
+          }
+        },
+        {
+          "name": "Deletar Autoridade",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/authorities/{{id}}", "host": ["{{baseUrl}}"], "path": ["api", "authorities", "{{id}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Abastecimentos",
+      "item": [
+        {
+          "name": "Criar Abastecimento",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idPosto\": 1,\n  \"dataHora\": \"2024-05-19T10:00:00Z\",\n  \"tipoCombustivel\": \"GASOLINA\",\n  \"precoPorLitro\": 5.49,\n  \"volumeAbastecido\": 40.0,\n  \"cpfMotorista\": \"12345678909\",\n  \"improperData\": false\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/v1/abastecimentos", "host": ["{{baseUrl}}"], "path": ["api", "v1", "abastecimentos"] }
+          }
+        },
+        {
+          "name": "Listar Abastecimentos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/v1/abastecimentos", "host": ["{{baseUrl}}"], "path": ["api", "v1", "abastecimentos"] }
+          }
+        },
+        {
+          "name": "Contar Abastecimentos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/abastecimentos/count",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "abastecimentos", "count"]
+            }
+          }
+        },
+        {
+          "name": "Buscar Abastecimento por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/abastecimentos/{{id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "abastecimentos", "{{id}}"]
+            }
+          }
+        },
+        {
+          "name": "Atualizar Abastecimento",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": {{id}},\n  \"idPosto\": 1,\n  \"dataHora\": \"2024-05-19T10:00:00Z\",\n  \"tipoCombustivel\": \"GASOLINA\",\n  \"precoPorLitro\": 5.49,\n  \"volumeAbastecido\": 40.0,\n  \"cpfMotorista\": \"12345678909\",\n  \"improperData\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/abastecimentos/{{id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "abastecimentos", "{{id}}"]
+            }
+          }
+        },
+        {
+          "name": "Atualização Parcial (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": {{id}},\n  \"precoPorLitro\": 5.99\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/abastecimentos/{{id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "abastecimentos", "{{id}}"]
+            }
+          }
+        },
+        {
+          "name": "Deletar Abastecimento",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/abastecimentos/{{id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "abastecimentos", "{{id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Motoristas",
+      "item": [
+        {
+          "name": "Histórico por CPF",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/motoristas/{{cpf}}/historico",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "motoristas", "{{cpf}}", "historico"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Usuários Públicos",
+      "item": [
+        {
+          "name": "Listar Usuários Públicos",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/users", "host": ["{{baseUrl}}"], "path": ["api", "users"] }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "jwt", "value": "" },
+    { "key": "login", "value": "" },
+    { "key": "id", "value": "" },
+    { "key": "cpf", "value": "" },
+    { "key": "activationKey", "value": "" },
+    { "key": "resetKey", "value": "" }
+  ]
+}
