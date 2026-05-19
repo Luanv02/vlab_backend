@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Objects;
+import org.hibernate.validator.constraints.br.CPF;
 
 /**
  * A DTO for the {@link com.vlab.backend.domain.Abastecimento} entity.
@@ -16,21 +17,26 @@ public class AbastecimentoDTO implements Serializable {
     private Long id;
 
     @NotNull
+    @Positive
     private Long idPosto;
 
     @NotNull
+    @PastOrPresent
     private Instant dataHora;
 
     @NotNull
     private TipoCombustivel tipoCombustivel;
 
     @NotNull
+    @Positive
     private BigDecimal precoPorLitro;
 
     @NotNull
+    @Positive
     private BigDecimal volumeAbastecido;
 
     @NotNull
+    @CPF
     private String cpfMotorista;
 
     private Boolean improperData;
