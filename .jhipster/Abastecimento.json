@@ -1,0 +1,50 @@
+{
+  "annotations": {
+    "changelogDate": "20260519010155"
+  },
+  "applications": ["vlabGateway"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "idPosto",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "dataHora",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "tipoCombustivel",
+      "fieldType": "TipoCombustivel",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "GASOLINA,ETANOL,DIESEL"
+    },
+    {
+      "fieldName": "precoPorLitro",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "volumeAbastecido",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "cpfMotorista",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "improperData",
+      "fieldType": "Boolean"
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "Abastecimento",
+  "pagination": "pagination",
+  "relationships": [],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

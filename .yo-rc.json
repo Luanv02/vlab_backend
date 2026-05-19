@@ -1,0 +1,20 @@
+{
+  "generator-jhipster": {
+    "applicationType": "monolith",
+    "authenticationType": "jwt",
+    "baseName": "vlabGateway",
+    "buildTool": "maven",
+    "clientFramework": "no",
+    "databaseType": "sql",
+    "devDatabaseType": "postgresql",
+    "entities": ["Abastecimento"],
+    "jhipsterVersion": "8.11.0",
+    "jwtSecretKey": "ZWM0MTM0MjRkNDQwZDFiOGU3ODExZWI5MmIyMzFlODcxM2FjOGY4OGJmOGQzZjYwYjc3YmM2ZGMwMzU3OGRhNTFhZTQ1NWM5NTFkMzE0OTEwM2IxYTVlNGRlYzQzMDRmNGNiMmY2ZDZlNGM2Nzc0NDZkY2QyYjliYTkxNWEyZTA=",
+    "languages": ["en"],
+    "lastLiquibaseTimestamp": 1779152515000,
+    "nativeLanguage": "en",
+    "packageName": "com.vlab.backend",
+    "prodDatabaseType": "postgresql",
+    "skipClient": true
+  }
+}

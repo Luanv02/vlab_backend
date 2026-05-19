@@ -1,0 +1,35 @@
+application {
+  config {
+    baseName vlabGateway
+    applicationType monolith
+    packageName com.vlab.backend
+    authenticationType jwt
+    databaseType sql
+    prodDatabaseType postgresql
+    devDatabaseType postgresql
+    buildTool maven
+    clientFramework no
+  }
+  entities *
+}
+
+enum TipoCombustivel {
+  GASOLINA,
+  ETANOL,
+  DIESEL
+}
+
+entity Abastecimento {
+  idPosto Long required
+  dataHora Instant required
+  tipoCombustivel TipoCombustivel required
+  precoPorLitro BigDecimal required
+  volumeAbastecido BigDecimal required
+  cpfMotorista String required
+  improperData Boolean
+}
+
+dto * with mapstruct
+service * with serviceClass
+filter *
+paginate * with pagination
