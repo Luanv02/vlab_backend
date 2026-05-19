@@ -214,6 +214,10 @@ jhipster:
     license-url:
   security:
 
+vlab:
+  security:
+    api-key: 'senha-pesadona-123'
+
 # jhipster-needle-add-application-yaml-document
 ---
 # ===================================================================
