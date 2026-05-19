@@ -4,6 +4,7 @@ import com.vlab.backend.domain.Abastecimento;
 import com.vlab.backend.repository.AbastecimentoRepository;
 import com.vlab.backend.service.dto.AbastecimentoDTO;
 import com.vlab.backend.service.mapper.AbastecimentoMapper;
+import java.math.BigDecimal;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class AbastecimentoService {
+
+    private static final BigDecimal MEDIA_GASOLINA = new BigDecimal("6.00");
+    private static final BigDecimal MEDIA_ETANOL = new BigDecimal("4.20");
+    private static final BigDecimal MEDIA_DIESEL = new BigDecimal("6.50");
+    private static final BigDecimal FATOR_ANOMALIA = new BigDecimal("1.25");
 
     private static final Logger LOG = LoggerFactory.getLogger(AbastecimentoService.class);
 
@@ -36,6 +42,7 @@ public class AbastecimentoService {
      */
     public AbastecimentoDTO save(AbastecimentoDTO abastecimentoDTO) {
         LOG.debug("Request to save Abastecimento : {}", abastecimentoDTO);
+        validarAnomaliaPreco(abastecimentoDTO);
         Abastecimento abastecimento = abastecimentoMapper.toEntity(abastecimentoDTO);
         abastecimento = abastecimentoRepository.save(abastecimento);
         return abastecimentoMapper.toDto(abastecimento);
@@ -94,5 +101,26 @@ public class AbastecimentoService {
     public void delete(Long id) {
         LOG.debug("Request to delete Abastecimento : {}", id);
         abastecimentoRepository.deleteById(id);
+    }
+
+    private void validarAnomaliaPreco(AbastecimentoDTO dto) {
+        if (dto.getTipoCombustivel() == null || dto.getPrecoPorLitro() == null) {
+            return;
+        }
+
+        BigDecimal mediaReferencia =
+            switch (dto.getTipoCombustivel()) {
+                case GASOLINA -> MEDIA_GASOLINA;
+                case ETANOL -> MEDIA_ETANOL;
+                case DIESEL -> MEDIA_DIESEL;
+            };
+
+        BigDecimal limiteMaximo = mediaReferencia.multiply(FATOR_ANOMALIA);
+
+        if (dto.getPrecoPorLitro().compareTo(limiteMaximo) > 0) {
+            dto.setImproperData(true);
+        } else {
+            dto.setImproperData(false);
+        }
     }
 }
