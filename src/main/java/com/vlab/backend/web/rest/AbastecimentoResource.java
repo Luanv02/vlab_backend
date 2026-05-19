@@ -30,7 +30,7 @@ import tech.jhipster.web.util.ResponseUtil;
  * REST controller for managing {@link com.vlab.backend.domain.Abastecimento}.
  */
 @RestController
-@RequestMapping("/api/abastecimentos")
+@RequestMapping("/api/v1/abastecimentos")
 public class AbastecimentoResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbastecimentoResource.class);
@@ -71,7 +71,7 @@ public class AbastecimentoResource {
             throw new BadRequestAlertException("A new abastecimento cannot already have an ID", ENTITY_NAME, "idexists");
         }
         abastecimentoDTO = abastecimentoService.save(abastecimentoDTO);
-        return ResponseEntity.created(new URI("/api/abastecimentos/" + abastecimentoDTO.getId()))
+        return ResponseEntity.created(new URI("/api/v1/abastecimentos" + abastecimentoDTO.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, abastecimentoDTO.getId().toString()))
             .body(abastecimentoDTO);
     }
