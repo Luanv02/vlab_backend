@@ -1,169 +1,106 @@
-# vlabGateway
+# V-Lab Gateway Backend
 
-This application was generated using JHipster 8.11.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v8.11.0](https://www.jhipster.tech/documentation-archive/v8.11.0).
+## Desafio Técnico: API Gateway para Gestão de Abastecimentos
 
-## Project Structure
+Este projeto é a resolução do desafio técnico para desenvolvimento de uma API Gateway voltada para a gestão de abastecimentos e motoristas. O sistema foi construído utilizando Java 21, Spring Boot 3 e JHipster 8, com foco em automatização de infraestrutura, segurança customizada e regras de negócio de detecção de anomalias.
 
-Node is required for generation and recommended for development. `package.json` is always generated for a better development experience with prettier, commit hooks, scripts and so on.
+---
 
-In the project root, JHipster generates configuration files for tools like git, prettier, eslint, husky, and others that are well known and you can find references in the web.
+### Tecnologias e Pré-requisitos
 
-`/src/*` structure follows default Java structure.
+Para executar este projeto localmente, certifique-se de ter as seguintes ferramentas devidamente instaladas em sua máquina:
 
-- `.yo-rc.json` - Yeoman configuration file
-  JHipster configuration is stored in this file at `generator-jhipster` key. You may find `generator-jhipster-*` for specific blueprints configuration.
-- `.yo-resolve` (optional) - Yeoman conflict resolver
-  Allows to use a specific action when conflicts are found skipping prompts for files that matches a pattern. Each line should match `[pattern] [action]` with pattern been a [Minimatch](https://github.com/isaacs/minimatch#minimatch) pattern and action been one of skip (default if omitted) or force. Lines starting with `#` are considered comments and are ignored.
-- `.jhipster/*.json` - JHipster entity configuration files
-- `/src/main/docker` - Docker configurations for the application and services that the application depends on
+- Java Development Kit (JDK) 21: Necessário para compilar o código-fonte.
+- Docker & Docker Compose: Essencial para orquestrar e rodar os containers do banco de dados e da aplicação. O Docker Desktop deve estar ativo em background.
+- Node.js (LTS) & npm: Utilizados pelo JHipster (sob o capô) para gerenciar ferramentas de build e formatação (como o Prettier).
+- JHipster CLI: Para geração, manutenção e atualização do projeto. Instale globalmente com `npm install -g generator-jhipster`.
+- Git: Para clonar e versionar o repositório.
+- (Opcional) Postman / Insomnia: Para testes de chamadas de API, embora o projeto já conte com o Swagger UI embutido.
 
-## Development
+---
 
-To start your application in the dev profile, run:
+### Como rodar
 
-```
-./mvnw
-```
+A infraestrutura foi simplificada e unificada para rodar com o menor esforço possível, garantindo que as dependências subam na ordem correta.
 
-For further instructions on how to develop with JHipster, have a look at [Using JHipster in development][].
+Importante: O arquivo `docker-compose.yml` na raiz do projeto serve apenas como um ponto de entrada e contém um `include` que referencia o arquivo `src/main/docker/app.yml` gerado pelo JHipster. Toda a configuração de dependências, como a ordem de subida dos containers, healthchecks e o controle para que a aplicação principal (vlabgateway-app) só inicie após o banco de dados (PostgreSQL) estar pronto, está definida dentro desse arquivo incluído (`app.yml`).
 
-## Building for production
+#### Passo a Passo
 
-### Packaging as jar
+1. Clone o repositório:
 
-To build the final jar and optimize the vlabGateway application for production, run:
+   ```bash
+   git clone https://github.com/seu-usuario/vlab-gateway.git
+   cd vlab-gateway
+   ```
 
-```
-./mvnw -Pprod clean verify
-```
+2. Gere a imagem Docker da aplicação:
 
-To ensure everything worked, run:
+   Antes de subir os containers, precisamos empacotar nosso código Java em uma imagem Docker. Rode o comando abaixo (ele utiliza o plugin Jib do Google):
 
-```
-java -jar target/*.jar
-```
+   ```bash
+   ./mvnw package -Pprod verify jib:dockerBuild -DskipTests
+   ```
 
-Refer to [Using JHipster in production][] for more details.
+   (Aguarde a mensagem de BUILD SUCCESS)
 
-### Packaging as war
+3. Suba a infraestrutura:
 
-To package your application as a war in order to deploy it to an application server, run:
+   Com a imagem gerada, orquestre a subida do banco e do app com um único comando:
 
-```
-./mvnw -Pprod,war clean verify
-```
+   ```bash
+   docker compose up
+   ```
 
-### JHipster Control Center
+4. Acesse a Documentação Viva:
 
-JHipster Control Center can help you manage and control your application(s). You can start a local control center server (accessible on http://localhost:7419) with:
+   Assim que o terminal indicar que a aplicação Spring Boot iniciou (na porta 8080), acesse o Swagger UI pelo seu navegador:
 
-```
-docker compose -f src/main/docker/jhipster-control-center.yml up
-```
+   http://localhost:8080/swagger-ui/index.html
 
-## Testing
+---
 
-### Spring Boot tests
+### Endpoints Implementados
 
-To launch your application's tests, run:
+O projeto expõe a API REST no prefixo `/api/v1/`.
 
-```
-./mvnw verify
-```
+- GET /api/v1/abastecimentos: (Público) Lista todo o histórico de abastecimentos registrados.
+- GET /api/v1/motoristas: (Público) Lista os motoristas cadastrados.
+- POST /api/v1/abastecimentos: (Protegido) Endpoint de ingestão de dados.
+  - Segurança: Requer a passagem de uma API Key através do header `X-API-Key` (Chave configurada: `senha-pesadona-123`).
+  - Regra de Negócio (Anomalia): Se o `precoPorLitro` do abastecimento exceder 25% da média mockada no sistema para aquele tipo de combustível, a API intercepta a requisição e salva o registro automaticamente com a flag `"improperData": true`.
 
-## Others
+Swagger UI & OpenAPI: (Públicos) Toda a interface gráfica e o JSON da documentação (`/v3/api-docs/`) foram abertos no Security Filter Chain para não exigir autenticação, facilitando os testes técnicos.
 
-### Code quality using Sonar
+---
 
-Sonar is used to analyse code quality. You can start a local Sonar server (accessible on http://localhost:9001) with:
+### Decisões: O que eu escrevi vs. O que o JHipster gerou
 
-```
-docker compose -f src/main/docker/sonar.yml up -d
-```
+Este projeto utilizou o JHipster como scaffold inicial, o que acelerou a entrega da base do projeto, mas exigiu refatorações profundas para atender aos requisitos específicos da V-Lab.
 
-Note: we have turned off forced authentication redirect for UI in [src/main/docker/sonar.yml](src/main/docker/sonar.yml) for out of the box experience while trying out SonarQube, for real use cases turn it back on.
+O que o JHipster gerou:
 
-You can run a Sonar analysis with using the [sonar-scanner](https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner) or by using the maven plugin.
+- A estrutura inicial do Spring Boot e configurações base.
+- Entidades baseadas no arquivo modelo.jdl e a estrutura de classes (Controller, Service, Repository, DTO).
+- Configuração padrão de segurança baseada em JWT.
+- Scripts de versionamento de banco via Liquibase.
+- Arquivos de configuração e propriedades específicas do JHipster (ver comentários em `application.yml`, `application-dev.yml`, `application-prod.yml`).
+- Integração com ferramentas de monitoramento e logging (ex: Prometheus, Logback, etc).
 
-Then, run a Sonar analysis:
+O que eu escrevi (Customizações):
 
-```
-./mvnw -Pprod clean verify sonar:sonar -Dsonar.login=admin -Dsonar.password=admin
-```
+- Filtro Customizado de Segurança (ApiKeyFilter): O JHipster travou toda a aplicação com JWT. Eu reescrevi a SecurityConfiguration liberando as rotas da API (`/api/v1/` e `/swagger-ui/`) e criei um `OncePerRequestFilter` do zero para interceptar e validar especificamente o POST de abastecimentos utilizando o header estático `X-API-Key`.
+- Regra de Anomalia no Service: Inserção da lógica de detecção de preços abusivos (regra dos 25%) diretamente na camada de serviço (AbastecimentoService).
+- Validações Automáticas: Adição de `@Valid` e anotações como `@CPF` e `@Positive` diretamente nos DTOs, forçando o Controller a retornar `400 Bad Request` antes mesmo da requisição chegar ao banco.
+- Unificação do Docker: Criação de um `docker-compose.yml` na raiz usando a funcionalidade de include para reaproveitar os arquivos gerados pelo JHipster, abstraindo a complexidade de rodar caminhos longos de pastas para o usuário final.
 
-If you need to re-run the Sonar phase, please be sure to specify at least the `initialize` phase since Sonar properties are loaded from the sonar-project.properties file.
+---
 
-```
-./mvnw initialize sonar:sonar -Dsonar.login=admin -Dsonar.password=admin
-```
+### Pendências e Trade-offs
 
-Additionally, Instead of passing `sonar.password` and `sonar.login` as CLI arguments, these parameters can be configured from [sonar-project.properties](sonar-project.properties) as shown below:
+Apesar de cobrir os requisitos essenciais, algumas decisões foram tomadas visando o escopo de tempo de um desafio técnico:
 
-```
-sonar.login=admin
-sonar.password=admin
-```
-
-For more information, refer to the [Code quality page][].
-
-### Docker Compose support
-
-JHipster generates a number of Docker Compose configuration files in the [src/main/docker/](src/main/docker/) folder to launch required third party services.
-
-For example, to start required services in Docker containers, run:
-
-```
-docker compose -f src/main/docker/services.yml up -d
-```
-
-To stop and remove the containers, run:
-
-```
-docker compose -f src/main/docker/services.yml down
-```
-
-[Spring Docker Compose Integration](https://docs.spring.io/spring-boot/reference/features/dev-services.html) is enabled by default. It's possible to disable it in application.yml:
-
-```yaml
-spring:
-  ...
-  docker:
-    compose:
-      enabled: false
-```
-
-You can also fully dockerize your application and all the services that it depends on.
-To achieve this, first build a Docker image of your app by running:
-
-```sh
-npm run java:docker
-```
-
-Or build a arm64 Docker image when using an arm64 processor os like MacOS with M1 processor family running:
-
-```sh
-npm run java:docker:arm64
-```
-
-Then run:
-
-```sh
-docker compose -f src/main/docker/app.yml up -d
-```
-
-For more information refer to [Using Docker and Docker-Compose][], this page also contains information on the Docker Compose sub-generator (`jhipster docker-compose`), which is able to generate Docker configurations for one or several JHipster applications.
-
-## Continuous Integration (optional)
-
-To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`), this will let you generate configuration files for a number of Continuous Integration systems. Consult the [Setting up Continuous Integration][] page for more information.
-
-[JHipster Homepage and latest documentation]: https://www.jhipster.tech
-[JHipster 8.11.0 archive]: https://www.jhipster.tech/documentation-archive/v8.11.0
-[Using JHipster in development]: https://www.jhipster.tech/documentation-archive/v8.11.0/development/
-[Using Docker and Docker-Compose]: https://www.jhipster.tech/documentation-archive/v8.11.0/docker-compose
-[Using JHipster in production]: https://www.jhipster.tech/documentation-archive/v8.11.0/production/
-[Running tests page]: https://www.jhipster.tech/documentation-archive/v8.11.0/running-tests/
-[Code quality page]: https://www.jhipster.tech/documentation-archive/v8.11.0/code-quality/
-[Setting up Continuous Integration]: https://www.jhipster.tech/documentation-archive/v8.11.0/setting-up-ci/
-[Node.js]: https://nodejs.org/
-[NPM]: https://www.npmjs.com/
+- API Key Mockada no `application.yml`: A chave `X-API-Key` está sendo lida do arquivo de configuração (`application.yml`). Em um cenário produtivo real, essa informação estaria armazenada em um cofre de chaves (como o AWS Secrets Manager ou HashiCorp Vault) ou lida via variáveis de ambiente injetadas por uma pipeline CI/CD.
+- Média de Preços Mockada: A regra de anomalia dos 25% utiliza uma média de preços "chumbada" no código (`MOCK_MEDIA_GASOLINA = 6.00`). Idealmente, isso deveria ser uma chamada ao banco de dados agrupando a média móvel dos abastecimentos dos últimos 30 dias para aquele tipo específico de combustível.
+- Cobertura de Testes Unitários: Para a entrega dos requisitos de núcleo, o foco foi na integração real (Docker/PostgreSQL) e regras de segurança. Há espaço para ampliar os testes unitários (JUnit) em cima da classe `ApiKeyFilter` e do comportamento de flag do `AbastecimentoService`.
+- Carga de Dados Base (Datafaker): Como próximo passo, seria interessante implementar um `CommandLineRunner` utilizando bibliotecas como Datafaker ou gerar scripts prévios no Liquibase para que o banco já nascesse com histórico de motoristas e abastecimentos no primeiro `docker compose up`.
