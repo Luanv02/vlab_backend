@@ -5,7 +5,9 @@ import com.vlab.backend.repository.AbastecimentoRepository;
 import com.vlab.backend.service.dto.AbastecimentoDTO;
 import com.vlab.backend.service.mapper.AbastecimentoMapper;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -101,6 +103,12 @@ public class AbastecimentoService {
     public void delete(Long id) {
         LOG.debug("Request to delete Abastecimento : {}", id);
         abastecimentoRepository.deleteById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public List<AbastecimentoDTO> findHistoricoByCpf(String cpf) {
+        LOG.debug("Request to get Historico de Abastecimentos for CPF : {}", cpf);
+        return abastecimentoRepository.findAllByCpfMotorista(cpf).stream().map(abastecimentoMapper::toDto).collect(Collectors.toList());
     }
 
     private void validarAnomaliaPreco(AbastecimentoDTO dto) {

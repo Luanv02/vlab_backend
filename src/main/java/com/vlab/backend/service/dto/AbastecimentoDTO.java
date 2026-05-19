@@ -29,11 +29,11 @@ public class AbastecimentoDTO implements Serializable {
 
     @NotNull
     @Positive
-    private BigDecimal precoPorLitro;
+    private BigDecimal precoPorLitro; //adicionar @DecicimalMin? Verificar posteriormente
 
     @NotNull
     @Positive
-    private BigDecimal volumeAbastecido;
+    private BigDecimal volumeAbastecido; //adicionar @DecicimalMin? Verificar posteriormente
 
     @NotNull
     @CPF

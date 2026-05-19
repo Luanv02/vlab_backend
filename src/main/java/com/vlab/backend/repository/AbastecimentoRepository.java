@@ -1,6 +1,7 @@
 package com.vlab.backend.repository;
 
 import com.vlab.backend.domain.Abastecimento;
+import java.util.List;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
@@ -9,4 +10,6 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface AbastecimentoRepository extends JpaRepository<Abastecimento, Long>, JpaSpecificationExecutor<Abastecimento> {}
+public interface AbastecimentoRepository extends JpaRepository<Abastecimento, Long>, JpaSpecificationExecutor<Abastecimento> {
+    List<Abastecimento> findAllByCpfMotorista(String cpfMotorista);
+}
