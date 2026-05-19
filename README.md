@@ -72,6 +72,12 @@ O projeto expõe a API REST no prefixo `/api/v1/`.
 
 Swagger UI & OpenAPI: (Públicos) Toda a interface gráfica e o JSON da documentação (`/v3/api-docs/`) foram abertos no Security Filter Chain para não exigir autenticação, facilitando os testes técnicos.
 
+Postman Collection: Para facilitar ainda mais os testes manuais, uma collection completa do Postman com todas as requisições configuradas foi disponibilizada junto ao código.
+
+- **Arquivo:** `src/main/resources/vlab_backend.postman_collection.json`
+- _Basta importar este arquivo diretamente no seu Postman ou Insomnia._
+- _Importante lembrar de passar o Header "x-api-key" com o valor da chave para o endpoint POST /api/v1/abastecimentos._
+
 ---
 
 ### Decisões: O que eu escrevi vs. O que o JHipster gerou
